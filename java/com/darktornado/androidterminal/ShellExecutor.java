@@ -43,15 +43,11 @@ public class ShellExecutor {
         if (cmd.startsWith("cd ")) return moveDir(cmd.replaceFirst("cd ", ""));
         if (cmd.equals("dir")) cmd = "ls";
         Process pro = null;
-        int pos = 0;
         try {
             pro = Runtime.getRuntime().exec(cmd, null, dir);
             pro.waitFor();
-            pos = 1;
             String result = readStream(pro.getInputStream());
-            pos = 2;
             pro.destroy();
-            pos = 3;
             if (cmd.equals("ls")) result = separateData(result);
             return new Result(result, false);
         } catch (IOException e) {
@@ -59,7 +55,7 @@ public class ShellExecutor {
             return new Result("Cannot find command or file: " + cmd, true);
         } catch (Exception e) {
             if (pro != null) pro.destroy();
-            return new Result(pos+", "+e.toString(), true);
+            return new Result(e.toString(), true);
         }
     }
 
